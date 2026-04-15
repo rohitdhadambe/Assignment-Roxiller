@@ -3,12 +3,24 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
-const { validatePassword } = require('../utils/validation');
+const { validateName, validateEmail, validateAddress, validatePassword } = require('../utils/validation');
 
 const jwtSecret = 'YOUR_SECRET_KEY';
 
 router.post('/signup', async (req, res) => {
     const { name, email, password, address } = req.body;
+
+    if (!validateName(name)) {
+        return res.status(400).json({ msg: 'Name must be between 20-60 characters.' });
+    }
+
+    if (!validateEmail(email)) {
+        return res.status(400).json({ msg: 'Please provide a valid email address.' });
+    }
+
+    if (!validateAddress(address)) {
+        return res.status(400).json({ msg: 'Address must not exceed 400 characters.' });
+    }
 
     if (!validatePassword(password)) {
         return res.status(400).json({ msg: 'Password must be 8-16 chars, include uppercase and a special char.' });
