@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Eye, EyeOff, CheckCircle, AlertCircle, Shield } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle, AlertCircle, ShieldCheck } from 'lucide-react';
 
 const ChangePassword = () => {
     const [newPassword, setNewPassword] = useState('');
@@ -20,135 +20,139 @@ const ChangePassword = () => {
         setError('');
 
         if (newPassword !== confirmPassword) {
-            setError('New password and confirmation password do not match.');
+            setError('Passwords do not match.');
             return;
         }
 
         if (!validatePassword(newPassword)) {
-            setError('Password must be 8-16 characters, include at least one uppercase letter and one special character.');
+            setError('Password does not meet requirements.');
             return;
         }
 
         try {
-            setMessage('Password updated successfully! Redirecting to login...');
+            setMessage('Password updated successfully!');
         } catch (err) {
             setError('Failed to update password.');
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+        <div className="relative min-h-screen flex items-center justify-center p-6">
+            {/* Consistent Fixed Background Layer */}
+            <div className="fixed inset-0 bg-slate-50 -z-10" />
+
             <div className="w-full max-w-md">
-                <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8">
-                    <div className="flex justify-center mb-6">
-                        <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-4 rounded-full shadow-lg">
-                            <Shield className="w-8 h-8 text-white" />
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 lg:p-10">
+                    <div className="flex justify-center mb-8">
+                        <div className="bg-slate-900 p-4 rounded-2xl shadow-sm text-white">
+                            <ShieldCheck className="w-8 h-8" />
                         </div>
                     </div>
 
-                    <h2 className="text-3xl font-bold text-center text-white mb-2">Update Password</h2>
-                    <p className="text-center text-gray-300 mb-8">Secure your account with a new password</p>
+                    <header className="text-center mb-8">
+                        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Security Update</h2>
+                        <p className="text-slate-500 mt-2 text-sm">Please enter your new account password</p>
+                    </header>
 
                     {message && (
-                        <div className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                            <p className="text-green-100 text-sm">{message}</p>
+                        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                            <p className="text-emerald-700 text-sm font-medium">{message}</p>
                         </div>
                     )}
 
                     {error && (
-                        <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3">
-                            <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
-                            <p className="text-red-100 text-sm">{error}</p>
+                        <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+                            <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                            <p className="text-red-700 text-sm font-medium">{error}</p>
                         </div>
                     )}
 
-                    <div className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-200 mb-2">
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">
                                 New Password
                             </label>
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
-                                </div>
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300" />
                                 <input 
                                     type={showNewPassword ? "text" : "password"}
-                                    placeholder="Enter new password"
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    className="w-full pl-12 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all"
                                     required
-                                    className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowNewPassword(!showNewPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 transition"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                                 >
                                     {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                 </button>
                             </div>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-200 mb-2">
-                                Confirm Password
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">
+                                Confirm New Password
                             </label>
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
-                                </div>
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300" />
                                 <input 
                                     type={showConfirmPassword ? "text" : "password"}
-                                    placeholder="Confirm new password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    className="w-full pl-12 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all"
                                     required
-                                    className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 transition"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                                 >
                                     {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                            <p className="text-xs text-gray-300 mb-2 font-medium">Password Requirements:</p>
-                            <ul className="text-xs text-gray-400 space-y-1">
-                                <li className="flex items-center gap-2">
-                                    <span className="w-1 h-1 bg-purple-400 rounded-full"></span>
-                                    8-16 characters long
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <span className="w-1 h-1 bg-purple-400 rounded-full"></span>
-                                    At least one uppercase letter
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <span className="w-1 h-1 bg-purple-400 rounded-full"></span>
-                                    At least one special character
-                                </li>
-                            </ul>
+                        {/* Requirements Checklist */}
+                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
+                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Requirements</p>
+                            <div className="flex flex-wrap gap-2">
+                                <Badge active={newPassword.length >= 8 && newPassword.length <= 16}>8-16 Chars</Badge>
+                                <Badge active={/[A-Z]/.test(newPassword)}>Uppercase</Badge>
+                                <Badge active={/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)}>Special</Badge>
+                            </div>
                         </div>
 
                         <button 
-                            onClick={handleSubmit}
-                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
+                            type="submit"
+                            className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-sm hover:bg-slate-800 active:scale-[0.98] transition-all"
                         >
-                            Update Password
+                            Confirm Update
                         </button>
-                    </div>
+                    </form>
                 </div>
-
-                <p className="text-center text-gray-400 text-sm mt-6">
-                    Remember your password? <span className="text-purple-400 hover:text-purple-300 font-medium cursor-pointer transition">Go back</span>
+                
+                <p className="text-center mt-8">
+                    <button className="text-sm font-semibold text-slate-400 hover:text-slate-900 transition-colors">
+                        Cancel and return to profile
+                    </button>
                 </p>
             </div>
         </div>
     );
 };
+
+// Simple Badge helper component for requirements
+const Badge = ({ active, children }) => (
+    <span className={`text-[10px] px-2 py-1 rounded-md font-bold transition-colors ${
+        active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'
+    }`}>
+        {children}
+    </span>
+);
 
 export default ChangePassword;
